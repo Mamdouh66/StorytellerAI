@@ -10,23 +10,25 @@ class WriterGPT:
 
     def generate_story(
         self,
-        critique: str | None,
-        character: str | None,
-        world_building: str | None,
-        previous_story: str | None,
+        critique: str | None = None,
+        character: str | None = None,
+        world_building: str | None = None,
+        previous_story: str | None = None,
         critique_turn: bool = False,
     ) -> str:
         response = self.client.chat.completions.create(
             model=settings.MODEL_NAME,
             messages=[
-                self.prompt_template(
-                    self,
-                    critique=critique,
-                    character=character,
-                    world_building=world_building,
-                    previous_story=previous_story,
-                    critique_turn=critique_turn,
-                )
+                {
+                    "role": "system",
+                    "content": self.prompt_template(
+                        critique=critique,
+                        character=character,
+                        world_building=world_building,
+                        previous_story=previous_story,
+                        critique_turn=critique_turn,
+                    ),
+                }
             ],
             temperature=0.3,
         )
@@ -34,10 +36,10 @@ class WriterGPT:
 
     def prompt_template(
         self,
-        critique: str,
-        character: str,
-        world_building: str,
-        previous_story: str,
+        critique: str | None = None,
+        character: str | None = None,
+        world_building: str | None = None,
+        previous_story: str | None = None,
         critique_turn: bool = False,
     ) -> str:
         if critique_turn:
@@ -78,7 +80,12 @@ class CritiqueGPT:
     def generate_critique(self, story: str) -> str:
         response = self.client.chat.completions.create(
             model=settings.MODEL_NAME,
-            messages=[self.prompt_template(story)],
+            messages=[
+                {
+                    "role": "system",
+                    "content": self.prompt_template(story=story),
+                }
+            ],
             temperature=0.3,
         )
         return response.choices[0].message.content
