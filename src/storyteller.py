@@ -72,7 +72,28 @@ class WriterGPT:
 
 
 class CritiqueGPT:
-    ...
+    def __init__(self):
+        self.client = OpenAI(api_key=settings.API_KEY)
+
+    def generate_critique(self, story: str) -> str:
+        response = self.client.chat.completions.create(
+            model=settings.MODEL_NAME,
+            messages=[self.prompt_template(story)],
+            temperature=0.3,
+        )
+        return response.choices[0].message.content
+
+    def prompt_template(self, story: str) -> str:
+        return f"""
+        Provide a comprehensive critique of the provided high fantasy story with title {settings.STORY_TITLE} 
+        and a desciption of {settings.STORY_DESCRIPTION} Analyze the narrative for structure, 
+        character development, world-building accuracy, and thematic depth. Identify areas where the plot might lack coherence,
+        or character motivations could be clearer. Offer specific suggestions for enhancing emotional depth, narrative complexity,
+        and reader engagement. Evaluate the balance of dialogue, descriptive passages, and action, providing recommendations for 
+        improvement. Highlight areas where the story might benefit from more detailed descriptions of the fantasy world.
+
+        story: {story}
+        """
 
 
 class CharacterGPT:
