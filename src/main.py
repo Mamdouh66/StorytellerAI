@@ -19,7 +19,6 @@ def main() -> None:
         story = writerGPT.generate_story(
             critique=critique, previous_story=prev_story, critique_turn=True
         )
-
         with open(f"../story_docs/story_after_critique_{turn+1}.md", "w") as f:
             f.write(story)
 

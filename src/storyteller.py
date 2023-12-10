@@ -170,9 +170,55 @@ class CritiqueGPT:
 
 # TODO: Implement CharacterGPT that focuses on generatinga and critique characters for the story.
 class CharacterGPT:
-    ...
+    def __init__(self):
+        client = OpenAI(api_key=settings.API_KEY)
+
+    def generate_character(self) -> str:
+        response = self.client.chat.completions.create(
+            model=settings.MODEL_NAME,
+            messages=[
+                {
+                    "role": "system",
+                    "content": self.prompt_template(),
+                }
+            ],
+            temperature=0.3,
+        )
+        return response.choices[0].message.content
+
+    def prompt_template(self) -> str:
+        return f"""
+        Generate characters for the high fantasy story with title {settings.STORY_TITLE}
+        and a desciption of {settings.STORY_DESCRIPTION} Focus on creating complex characters
+        with detailed backstories, motivations, and personalities. Ensure the characters are
+        consistent with the fantasy world and the story's plot. Pay attention to crafting characters
+        that are relatable and engaging for the reader. write 4000 tokens.
+        """
 
 
 # TODO: Implement WorldGPT that focuses on generating and critique the world for the story.
 class WorldGPT:
-    ...
+    def __init__(self):
+        client = OpenAI(api_key=settings.API_KEY)
+
+    def generate_world(self) -> str:
+        response = self.client.chat.completions.create(
+            model=settings.MODEL_NAME,
+            messages=[
+                {
+                    "role": "system",
+                    "content": self.prompt_template(),
+                }
+            ],
+            temperature=0.3,
+        )
+        return response.choices[0].message.content
+
+    def prompt_template(self) -> str:
+        return f"""
+        Generate the world for the high fantasy story with title {settings.STORY_TITLE}
+        and a desciption of {settings.STORY_DESCRIPTION} Focus on creating a detailed fantasy world
+        with unique elements, landscapes, and creatures. Ensure the world is consistent with the story's plot
+        and the characters' backstories. Pay attention to crafting a world that is immersive and engaging for the reader.
+        write 4000 tokens.
+        """
