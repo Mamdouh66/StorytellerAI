@@ -104,7 +104,12 @@ class WriterGPT:
         Focus on creating a multi-layered narrative with detailed descriptions, complex characters, and an engaging plot structure.
         Ensure the story unfolds with a captivating introduction, develops tension and conflict in the middle, and concludes
         with a satisfying climax. Pay attention to crafting vivid scenes that bring the fantasy world to life, highlighting
-        its unique elements, landscapes, and creatures. Write as Markdown, write 4000 tokens.
+        its unique elements, landscapes, and creatures. I want you to write just the first chapter and go on details on it.
+        
+        here are the details of the characters: {character}
+        here are the details of the world: {world_building}
+        
+        Write as Markdown, write 4000 tokens.
         """
         return init_story_prompt
 
@@ -163,17 +168,16 @@ class CritiqueGPT:
         or character motivations could be clearer. Offer specific suggestions for enhancing emotional depth, narrative complexity,
         and reader engagement. Evaluate the balance of dialogue, descriptive passages, and action, providing recommendations for 
         improvement. Highlight areas where the story might benefit from more detailed descriptions of the fantasy world.
-
+        You will be given just the first chapter of it so you can focus on it. 
         story: {story}
         """
 
 
-# TODO: Implement CharacterGPT that focuses on generatinga and critique characters for the story.
 class CharacterGPT:
     def __init__(self):
-        client = OpenAI(api_key=settings.API_KEY)
+        self.client = OpenAI(api_key=settings.API_KEY)
 
-    def generate_character(self) -> str:
+    def generate_characters(self) -> str:
         response = self.client.chat.completions.create(
             model=settings.MODEL_NAME,
             messages=[
@@ -196,10 +200,9 @@ class CharacterGPT:
         """
 
 
-# TODO: Implement WorldGPT that focuses on generating and critique the world for the story.
 class WorldGPT:
     def __init__(self):
-        client = OpenAI(api_key=settings.API_KEY)
+        self.client = OpenAI(api_key=settings.API_KEY)
 
     def generate_world(self) -> str:
         response = self.client.chat.completions.create(
